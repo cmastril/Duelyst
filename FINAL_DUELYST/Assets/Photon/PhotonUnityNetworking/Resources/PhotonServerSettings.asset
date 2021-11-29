@@ -42,6 +42,11 @@ MonoBehaviour:
   - TellClientsToSpawnGenerals
   - TellClientsToSpawnGeneral
   - TellClientsToSpawnTheirGenerals
+  - TurnCounterProcedure2
+  - TurnCounterProcedure3
+  - InitializeCurrentPlayerVariable
+  - ChangePlayerTurn
+  - TellPlayersToSpawnGenerals
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

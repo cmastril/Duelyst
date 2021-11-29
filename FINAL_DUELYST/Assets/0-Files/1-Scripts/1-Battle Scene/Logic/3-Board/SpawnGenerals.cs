@@ -7,54 +7,61 @@ public class SpawnGenerals : MonoBehaviour
 {
     [SerializeField] private Board board;
     [SerializeField] private Deck deck;
+    [SerializeField] private Turn turn;
+
     [SerializeField] private CardReferences cardReferences;
+    
 
     public void SpawnGeneralProcedure()
     {
         if (PhotonNetwork.IsMasterClient == true)
         {
-            int masterPosition = Random.Range(0, 2);
-
             PhotonView photonView = PhotonView.Get(this);
-            photonView.RPC("TellClientsToSpawnTheirGenerals", RpcTarget.All, masterPosition);
+            photonView.RPC("TellPlayersToSpawnGenerals", RpcTarget.All);
         }
     }
 
     [PunRPC]
-    public void TellClientsToSpawnTheirGenerals(int masterPosition)
+    public void TellPlayersToSpawnGenerals()
     {
-        int myGeneralID = deck.general.GetComponent<Card>().cardID;
-        int myPosition = -5;
+        int position = -5;
+        string myName = PhotonNetwork.LocalPlayer.NickName;
+        Debug.Log(myName);
 
-        if (PhotonNetwork.IsMasterClient == true)
+        if (turn.player1Name == myName)
         {
-            myPosition = masterPosition;
+            position = 0;
         }
-        else if (PhotonNetwork.IsMasterClient == false)
+        else if (turn.player2Name == myName)
         {
-            myPosition = (masterPosition + 1) % 2;
+            position = 1;
         }
+
+        int curGeneralID = deck.general.GetComponent<Card>().cardID;
 
         PhotonView photonView = PhotonView.Get(this);
-        photonView.RPC("SpawnMyGeneral", RpcTarget.All, myGeneralID, myPosition);
+        photonView.RPC("SpawnMyGeneral", RpcTarget.All, position, curGeneralID, myName);
     }
 
     [PunRPC]
-    public void SpawnMyGeneral(int curGeneralID, int position)
+    public void SpawnMyGeneral(int position, int currentGeneralID, string ownerPlayerName)
     {
-        GameObject currentGeneral = cardReferences.idToCardObject(curGeneralID);
+        GameObject currentGeneralPrefab = cardReferences.idToCardObject(currentGeneralID);
+        GameObject currentGeneral = Instantiate(currentGeneralPrefab, new Vector3(100,0,0), Quaternion.identity);
+
+        Tile curTile = null;
 
         if (position == 0)
         {
-            Tile curTile = board.GetComponent<Board>().tiles2D[2, 0].GetComponent<Tile>();
-            curTile.setCurrentCard(currentGeneral);
-            curTile.displayCurrentCard();
+            curTile = board.GetComponent<Board>().tiles2D[2, 0].GetComponent<Tile>();
         }
         else if (position == 1)
         {
-            Tile curTile = board.GetComponent<Board>().tiles2D[2, 8].GetComponent<Tile>();
-            curTile.setCurrentCard(currentGeneral);
-            curTile.displayCurrentCard();
+            curTile = board.GetComponent<Board>().tiles2D[2, 8].GetComponent<Tile>();
         }
+
+        curTile.setCurrentCard(currentGeneral);
+        curTile.displayCurrentCard();
+        curTile.currentCard.GetComponent<Card>().SetCardOwner(ownerPlayerName);
     }
 }

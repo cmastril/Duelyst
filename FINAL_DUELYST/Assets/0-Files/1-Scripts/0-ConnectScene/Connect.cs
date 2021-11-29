@@ -12,8 +12,10 @@ public class Connect : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.JoinRandomRoom();
         }
-
-        PhotonNetwork.ConnectUsingSettings();
+        else
+        {
+            PhotonNetwork.ConnectUsingSettings();
+        }
     }
 
     public override void OnConnectedToMaster()
@@ -23,7 +25,7 @@ public class Connect : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("Battle");
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)

@@ -25,9 +25,6 @@ public class InitializeBoardTiles : MonoBehaviour
 
             tempTileArray2d[tileIndex, currentColumn] = currentTile;
 
-            Debug.Log((tileIndex, currentColumn));
-            Debug.Log(currentTile);
-
             tileIndex += 1;
         }
 

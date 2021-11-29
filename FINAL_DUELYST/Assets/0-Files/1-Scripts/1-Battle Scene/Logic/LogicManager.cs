@@ -14,6 +14,8 @@ public class LogicManager : MonoBehaviour
     [SerializeField] private FillHand fillHand;
 
     [SerializeField] private InitializeBoardTiles initializeBoardTiles;
+
+    [SerializeField] private InitializeTurnCounter initializeTurnCounter;
     [SerializeField] private SpawnGenerals spawnGenerals;
 
     public void StartGameLogicProcedure()
@@ -26,6 +28,8 @@ public class LogicManager : MonoBehaviour
         displayReplaceSlots.DisplayReplaceSlotCards();
 
         initializeBoardTiles.InitializeBoard();
+
+        initializeTurnCounter.StartTurnCounterProcedure();
         spawnGenerals.SpawnGeneralProcedure();
     }
 
